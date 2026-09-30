@@ -1,0 +1,11 @@
+import {build} from 'esbuild';import {mkdir,readFile,writeFile,copyFile,cp} from 'node:fs/promises';import {execFileSync} from 'node:child_process';
+await mkdir('dist',{recursive:true});
+await build({entryPoints:['src/core/index.ts'],outfile:'dist/core/index.js',bundle:true,platform:'neutral',format:'esm',target:'es2022',legalComments:'inline'});
+await build({entryPoints:['src/cli.ts'],outfile:'dist/cli.js',bundle:true,platform:'node',format:'esm',target:'node22',legalComments:'inline'});
+await build({entryPoints:['src/browser.ts'],outfile:'dist/browser.js',bundle:true,platform:'browser',format:'iife',target:'es2022',minify:true,legalComments:'inline'});
+const css=await readFile('web/style.css','utf8'),js=await readFile('dist/browser.js','utf8'),template=await readFile('web/index.html','utf8');
+const html=template.replace('<!--STYLE-->',`<style>${css}</style>`).replace('<!--SCRIPT-->',`<script>${js.replace(/<\/script/gi,'<\\/script')}</script>`);
+await writeFile('dist/index.html',html);await copyFile('dist/index.html','dist/AgendaDiff-Offline.html');
+execFileSync(process.execPath,['node_modules/typescript/bin/tsc','--project','tsconfig.build.json'],{stdio:'inherit'});
+await mkdir('vendor/ical.js',{recursive:true});await cp('node_modules/ical.js/lib','vendor/ical.js/lib',{recursive:true});await copyFile('node_modules/ical.js/LICENSE','vendor/ical.js/LICENSE');await copyFile('node_modules/ical.js/package.json','vendor/ical.js/package.json');
+console.log('Built shared core, CLI, single-file browser app and TypeScript declarations');

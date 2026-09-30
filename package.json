@@ -1,0 +1,48 @@
+{
+  "name": "agendadiff",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Local, inspectable iCalendar export comparisons with honest uncertainty",
+  "type": "module",
+  "license": "MIT",
+  "engines": {
+    "node": ">=22"
+  },
+  "bin": {
+    "agendadiff": "dist/cli.js"
+  },
+  "exports": {
+    ".": {
+      "types": "./dist/core/index.d.ts",
+      "import": "./dist/core/index.js"
+    }
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE",
+    "THIRD_PARTY_NOTICES.md",
+    "vendor"
+  ],
+  "scripts": {
+    "test": "node --import tsx --test tests/*.test.ts",
+    "check": "tsc --noEmit",
+    "build": "node scripts/build.mjs",
+    "verify": "npm run check && npm test && npm run build && npm run verify:standalone",
+    "demo": "node dist/cli.js fixtures/before.ics fixtures/after.ics",
+    "prepack": "npm run build",
+    "verify:package": "node scripts/verify-package.mjs",
+    "verify:standalone": "node scripts/verify-standalone.mjs"
+  },
+  "dependencies": {
+    "ical.js": "2.2.1"
+  },
+  "devDependencies": {
+    "@types/jsdom": "30.0.0",
+    "@types/node": "26.6.3",
+    "esbuild": "0.28.2",
+    "jsdom": "30.1.1",
+    "tsx": "4.23.15",
+    "typescript": "7.0.2"
+  }
+}

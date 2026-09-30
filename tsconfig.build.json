@@ -1,0 +1,1 @@
+{"extends":"./tsconfig.json","compilerOptions":{"emitDeclarationOnly":true,"rootDir":"src"},"include":["src/core/**/*.ts"],"exclude":["tests","node_modules"]}
